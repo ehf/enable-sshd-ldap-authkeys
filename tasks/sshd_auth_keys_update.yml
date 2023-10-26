@@ -1,0 +1,28 @@
+---
+
+- name: "check for sss_ssh_authorizedkeys"
+  ansible.buildin.stat:
+    path: /usr/bin/sss_ssh_authorizedkeys
+  register: sss_authkeys 
+
+- name: "enable authorized keys lookup script"
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    backup: true
+    insertafter: '^AuthorizedKeysFile'
+    block: |
+      AuthorizedKeysCommand /usr/bin/sss_ssh_authorizedkeys
+      AuthorizedKeysCommandUser nobody
+  when:
+    - sss_authkeys.stat.exists | bool
+    - sss_authkeys.stat.isreg | bool
+    - sss_authkeys.stat.executable | bool
+  notify:
+    - restart sshd
+    
+- name: "ensure sshd service is started and enabled"
+  ansible.builtin.service:
+    name: sshd
+    state: started
+    enabled: true
+

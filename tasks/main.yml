@@ -1,0 +1,6 @@
+---
+# tasks file for enable-sshd-ldap-authkeys
+
+- import_tasks: sshd_auth_keys_update.yml
+  when: 
+    - enable_sss_authkeys | bool

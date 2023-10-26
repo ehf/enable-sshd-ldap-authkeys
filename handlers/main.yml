@@ -1,0 +1,30 @@
+---
+# handlers file for enable-sshd-ldap-authkeys
+
+- name: stop sssd
+  ansible.builtin.service:
+    name: sssd
+    state: stopped
+  listen: restart sssd
+
+- name: delete sssd cache
+  ansible.builtin.file:
+    path: "/var/lib/sss/db/{{ item }}"
+    state: absent
+  with_items:
+    - cache_default.ldb
+    - config.ldb
+    - sssd.ldb
+    - timestamps_default.ldb
+  listen: restart sssd
+
+- name: start sssd
+  ansible.builtin.service:
+    name: sssd
+    state: started
+  listen: restart sssd
+
+- name: restart sshd
+  ansible.builtin.service:
+    name: sshd
+    state: restarted

@@ -1,0 +1,4 @@
+---
+# defaults file for enable-sshd-ldap-authkeys
+
+enable_sss_authkeys: False
