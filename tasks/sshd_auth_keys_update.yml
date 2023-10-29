@@ -1,7 +1,7 @@
 ---
 
 - name: "check for sss_ssh_authorizedkeys"
-  ansible.buildin.stat:
+  ansible.builtin.stat:
     path: /usr/bin/sss_ssh_authorizedkeys
   register: sss_authkeys 
 
